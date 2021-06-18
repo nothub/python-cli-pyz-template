@@ -1,0 +1,44 @@
+name: 👮
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout changes
+        uses: actions/checkout@v2
+
+      - name: get commit info
+        run: echo "SHA=$GITHUB_SHA" >> $GITHUB_ENV
+
+      - name: prepare python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: build pyz
+        run: make pyz
+
+      - name: prepare release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: automated release at commit ${{ env.SHA }}
+          draft: false
+          prerelease: false
+
+      - name: publish pyz
+        uses: csexton/release-asset-action@v2
+        with:
+          file: app.pyz
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ steps.create_release.outputs.upload_url }}
