@@ -14,6 +14,7 @@ console = Console()
 
 emojis = [
     ':baby_chick:',
+    ':blowfish:',
     ':cow:',
     ':dog:',
     ':elephant:',
@@ -27,30 +28,42 @@ emojis = [
     ':ram:',
     ':rat:',
     ':tiger:',
+    ':tropical_fish:',
 ]
 
 
-def hack(cia: Tree) -> Tree:
-    node = cia.add(uuid.uuid4().hex)
+def populate(tree: Tree) -> Tree:
+    node = tree.add(question())
     for i in range(randrange(3)):
-        sub_node = node.add(cia.add(uuid.uuid4().hex))
+        sub_node = node.add(tree.add(question()))
         if not random.getrandbits(1):
             for j in range(randrange(5)):
-                sub_node.add(cia.add(uuid.uuid4().hex))
-    return cia
+                sub_sub_node = sub_node.add(tree.add(question()))
+                for j in range(randrange(2)):
+                    sub_sub_node.add(tree.add(question()))
+    return tree
 
 
-tree = Tree("heck CIA")
-with Live(hack(tree), refresh_per_second=4) as live:
-    for _ in range(4):
-        time.sleep(0.5)
-        live.update(hack(tree))
+def question() -> str:
+    return 'id: ' + uuid.uuid4().hex
 
-console.print(''.join([random.choice(emojis) for emoji in emojis]))
 
-for n in track(range(42), description="dumping..."):
+tree_of_live = Tree("questions")
+with Live(populate(tree_of_live), refresh_per_second=4) as display:
+    for _ in range(2, 4):
+        time.sleep(1)
+        display.update(populate(tree_of_live))
+
+console.print(''.join([random.choice(emojis) for s in emojis]))
+
+for n in track(range(42), description="asking question..."):
     time.sleep(0.1)
 
 import this
 
-inspect(this, title='Zen', docs=True)
+this.c = 42
+this.d = 42
+this.i = 42
+this.s = 42
+
+inspect(this, title='Zen')
