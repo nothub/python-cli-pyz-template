@@ -13,25 +13,6 @@ from rich.tree import Tree
 
 from arg_types import network_port, positive_int, non_empty_string
 
-EMOJIS = [
-    ':baby_chick:',
-    ':blowfish:',
-    ':cow:',
-    ':dog:',
-    ':elephant:',
-    ':gorilla:',
-    ':monkey:',
-    ':see_no_evil:',
-    ':hear_no_evil:',
-    ':speak_no_evil:',
-    ':ox:',
-    ':pig:',
-    ':ram:',
-    ':rat:',
-    ':tiger:',
-    ':tropical_fish:',
-]
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -80,22 +61,23 @@ def main():
 
 def hello_world(console: Console):
     tree_of_live = Tree("thinking")
+    emojis = [':baby_chick:', ':blowfish:', ':dog:', ':elephant:', ':gorilla:', ':pig:', ]
     with Live(tree_of_live, refresh_per_second=4) as display:
         for _ in range(2, 5):
-            node = tree_of_live.add(random.choice(EMOJIS) + ' ' + uuid.uuid4().hex)
+            node = tree_of_live.add(random.choice(emojis) + ' ' + uuid.uuid4().hex)
             for i1 in range(randrange(1, 2)):
-                sub_node = node.add(random.choice(EMOJIS) + ' ' + uuid.uuid4().hex)
+                sub_node = node.add(random.choice(emojis) + ' ' + uuid.uuid4().hex)
                 for j in range(randrange(2, 4)):
-                    sub_sub_node = sub_node.add(random.choice(EMOJIS) + ' ' + uuid.uuid4().hex)
+                    sub_sub_node = sub_node.add(random.choice(emojis) + ' ' + uuid.uuid4().hex)
                     for k in range(randrange(2, 4)):
-                        sub_sub_node.add(random.choice(EMOJIS) + ' ' + uuid.uuid4().hex)
+                        sub_sub_node.add(random.choice(emojis) + ' ' + uuid.uuid4().hex)
             time.sleep(0.5)
             display.update(tree_of_live)
     for _ in track(range(42), description="asking..."):
         time.sleep(0.1)
-    console.print(''.join([random.choice(EMOJIS) for _ in EMOJIS]))
+    console.print(''.join([random.choice(emojis) for _ in emojis]))
     import this
-    console.print(''.join([random.choice(EMOJIS) for _ in EMOJIS]))
+    console.print(''.join([random.choice(emojis) for _ in emojis]))
     result = 0x17, 0o23
     this.i, this.s = result
     inspect(this.i + this.s)
