@@ -10,21 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: checkout changes
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: get commit info
-        run: echo "SHA=$GITHUB_SHA" >> $GITHUB_ENV
-
-      - name: prepare python
+      - name: Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
 
-      - name: build pyz
+      - name: Build
         run: make pyz
 
-      - name: prepare release
+      - name: Draft
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -32,11 +29,11 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
-          body: automated release at commit ${{ env.SHA }}
+          body: 'automated release at commit ${{ github.sha }}'
           draft: false
           prerelease: false
 
-      - name: publish pyz
+      - name: Release
         uses: csexton/release-asset-action@v2
         with:
           file: app.pyz
